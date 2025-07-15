@@ -23,4 +23,6 @@ Route::post('/pelanggan', [PelangganController::class, 'store']);
 Route::get('/pelanggan/{id}', [PelangganController::class, 'show']);
 Route::put('/pelanggan/{id}', [PelangganController::class, 'update']);
 Route::delete('/pelanggan/{id}', [PelangganController::class, 'destroy']);
+
+//Crud Produk
 Route::resource('/produk', ProdukController::class);
