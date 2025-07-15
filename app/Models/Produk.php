@@ -2,17 +2,31 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Produk extends Model {
+class Produk extends Model
+{
     use HasFactory;
 
     protected $table = 'produk';
-    protected $primaryKey = 'produkID';
+
+    protected $primaryKey = 'produkID'; 
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = ['namaProduk', 'harga', 'stok'];
 
-    public function detailPenjualan() {
-        return $this->hasMany(DetailPenjualan::class, 'produkID', 'produkID');
+    public static function createOrUpdateStock(array $data)
+    {
+        $produk = self::where('namaProduk', $data['namaProduk'])->first();
+
+        if ($produk) {
+            $produk->stok += $data['stok'];
+            $produk->harga = $data['harga'];
+            $produk->save();
+        } else {
+            self::create($data);
+        }
     }
 }
