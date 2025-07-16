@@ -58,7 +58,14 @@ class UserController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email atau password salah',
+            ], 401);
+        }
+
+        if (!Hash::check($request->password, (string) $user->password)) {
             return response()->json([
                 'status' => false,
                 'message' => 'Email atau password salah',
@@ -78,7 +85,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         if ($request->user()) {
-            $request->user()->token()->revoke();
+            $request->user()->tokens()->delete();
 
             return response()->json([
                 'status' => true,
